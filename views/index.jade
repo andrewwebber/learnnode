@@ -1,0 +1,13 @@
+extends layout
+
+block content
+	h1= title
+	p Welcome to #{title}
+	input#userName(type="text")
+	input#password(type="text")
+	input#submitButton(type="submit") 
+
+	script(src='jquery/jquery.min.js')
+
+	script(src='javascripts/index.js')
+	script(src='knockout/knockout-latest.js')
