@@ -8,6 +8,7 @@ var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var sampleroute = require('./routes/sample');
+var loginRoute = require('./routes/login');
 var app = express();
 
 // view engine setup
@@ -26,6 +27,7 @@ app.use('/knockout', express.static(path.join(__dirname, 'node_modules/knockout/
 app.use('/', routes);
 app.use('/users', users);
 app.use('/sample', sampleroute);
+app.use('/login', loginRoute);
 
 /// catch 404 and forwarding to error handler
 app.use(function(req, res, next) {
