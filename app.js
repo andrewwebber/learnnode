@@ -11,10 +11,13 @@ var users = require('./routes/users');
 var sampleroute = require('./routes/sample');
 var loginRoute = require('./routes/login');
 var app = express();
+var jwt = require('jwt-simple');
+var moment = require('moment');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
+app.set('jwtTokenSecret', 'YOUR_SECRET_STRING');
 
 app.use(favicon());
 app.use(logger('dev'));
@@ -35,7 +38,6 @@ function restrict(req, res, next) {
     res.redirect('/login');
   }
 };
-
 
 app.use('/', routes);
 app.use('/users', restrict, users);
