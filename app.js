@@ -30,6 +30,7 @@ function restrict(req, res, next) {
   if (req.session.user) {
     next();
   } else {
+    console.log("redirecting user to login page");
     req.session.error = 'Access denied!';
     res.redirect('/login');
   }

@@ -18,9 +18,10 @@ router.post('/', function(req, res) {
 		return;
 	}
 
+	console.log('successfully authenticated user :%s',req.body.userName);
 	req.session.regenerate(function(){
 		req.session.userName = userName;
-
+		res.redirect('/');
 	});
 });
 
