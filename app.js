@@ -3,6 +3,7 @@ var path = require('path');
 var favicon = require('static-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
+var session = require('express-session');
 var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
@@ -19,14 +20,25 @@ app.use(favicon());
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
-app.use(cookieParser());
+app.use(cookieParser("sampleapplication"));
+app.use(session());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/jquery',   express.static(path.join(__dirname, 'node_modules/jquery/dist')));
 app.use('/knockout', express.static(path.join(__dirname, 'node_modules/knockout/build/output/')));
 
+function restrict(req, res, next) {
+  if (req.session.user) {
+    next();
+  } else {
+    req.session.error = 'Access denied!';
+    res.redirect('/login');
+  }
+};
+
+
 app.use('/', routes);
-app.use('/users', users);
-app.use('/sample', sampleroute);
+app.use('/users', restrict, users);
+app.use('/sample', restrict, sampleroute);
 app.use('/login', loginRoute);
 
 /// catch 404 and forwarding to error handler

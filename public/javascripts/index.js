@@ -6,7 +6,7 @@ function DataModel() {
         return $.ajax(self.authenticateUrl,{
 			type:"POST",
 			data:JSON.stringify(loginInfo),
-	       		contentType : 'application/json'
+			contentType : 'application/json'
 		});
     };
 }

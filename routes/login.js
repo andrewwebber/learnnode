@@ -4,13 +4,24 @@ var bodyParser = require('body-parser');
 
 /* GET users listing. */
 router.get('/', function(req, res) {
-	res.send('login');
+	res.render('login', { title: 'Sample Application' });
 });
 
 router.post('/', function(req, res) {
-	console.log('body ' + req.body);
-	console.log(req.body.userName);
-	res.send(req.body.userName);
+	var userName = req.body.userName;
+	var password = req.body.password;
+
+	console.log("authenticating user :%s",req.body.userName);
+	if(userName !== password)
+	{
+		console.log("invalid user :%s",userName);
+		return;
+	}
+
+	req.session.regenerate(function(){
+		req.session.userName = userName;
+
+	});
 });
 
 module.exports = router;
