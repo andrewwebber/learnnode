@@ -4,22 +4,20 @@ block content
 	h1= title
 	p Welcome to #{title}
 	div#main
-		// ko if: activeViewName() == 'login' 
-		div#login(data-bind="with: loginViewModel")
-			p
-				label UserName:
-				input#userName(type="text" data-bind="value: userName")
-			p
-				label Password:
-				input#password(type="text" data-bind="value: password")
-			p
-				input#submitButton(type="submit" data-bind="click: signin" value="signin")
-		// /ko
+		div(data-bind="if: activeViewName() == 'login'")
+			div(data-bind="with: loginViewModel")
+				p
+					label UserName:
+					input#userName(type="text" data-bind="value: userName")
+				p
+					label Password:
+					input#password(type="text" data-bind="value: password")
+				p
+					input#submitButton(type="submit" data-bind="click: signin" value="signin")
 
-		// ko if: activeViewName() == 'protected'
-		div#protected(data-bind="with: protectedAreaViewModel")
-			p(data-bind="text: message") 
-		// /ko
+		div(data-bind="if: activeViewName() == 'protected'")
+			div#protected(data-bind="with: protectedAreaViewModel")
+				p(data-bind="text: message") 
 
 	script(src='jquery/jquery.js')
 	script(src='knockout/knockout-latest.js')
