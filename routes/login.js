@@ -1,6 +1,10 @@
 var express = require('express');
 var router = express.Router();
 var bodyParser = require('body-parser');
+var moment = require('moment');
+var jwt = require('jwt-simple');
+var app = express();
+app.set('jwtTokenSecret', 'YOUR_SECRET_STRING');
 
 /* GET users listing. */
 router.get('/', function(req, res) {
@@ -19,10 +23,20 @@ router.post('/', function(req, res) {
 	}
 
 	console.log('successfully authenticated user :%s',req.body.userName);
-	req.session.regenerate(function(){
-		req.session.userName = userName;
-		res.send('200');
+	var expires = moment().add('days', 7).valueOf();
+	var token = jwt.encode({
+			iss: userName,
+			exp: expires
+	}, app.get('jwtTokenSecret'));
+
+	res.json({
+		token : token,
+		expires: expires,
+		user: userName
 	});
+
+	console.log("generated token");
+	console.log(token);
 });
 
 module.exports = router;

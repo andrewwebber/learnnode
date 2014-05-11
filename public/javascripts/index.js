@@ -20,8 +20,8 @@ function App(dataModel) {
     self.signin = function () {
         dataModel.login({ userName: self.userName(), password: self.password() })
 		.done(
-		function () {
-			alert("authenticated");
+		function (data) {
+			alert(data);
 		});
     };
 }
