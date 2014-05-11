@@ -1,7 +1,28 @@
 extends layout
 
 block content
- h1= title
- p Welcome to #{title}
- p
-  access allowed
+	h1= title
+	p Welcome to #{title}
+	div#main
+		// ko if: activeViewName() == 'login' 
+		div#login(data-bind="with: loginViewModel")
+			p
+				label UserName:
+				input#userName(type="text" data-bind="value: userName")
+			p
+				label Password:
+				input#password(type="text" data-bind="value: password")
+			p
+				input#submitButton(type="submit" data-bind="click: signin" value="signin")
+		// /ko
+
+		// ko if: activeViewName() == 'protected'
+		div#protected(data-bind="with: protectedAreaViewModel")
+			p(data-bind="text: message") 
+		// /ko
+
+	script(src='jquery/jquery.js')
+	script(src='knockout/knockout-latest.js')
+	script(src='javascripts/sammy.js')
+	script(src='//cdnjs.cloudflare.com/ajax/libs/knockout-validation/1.0.2/knockout.validation.min.js')
+	script(src='javascripts/index.js')
