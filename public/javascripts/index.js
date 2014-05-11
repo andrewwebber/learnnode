@@ -1,19 +1,24 @@
 function DataModel() {
     var self = this;
-    self.authenticateUrl = "/login";
 
     self.login = function (loginInfo) {
-        return $.ajax(self.authenticateUrl,{
+        return $.ajax("/login",{
 			type:"POST",
 			data:JSON.stringify(loginInfo),
 			contentType : 'application/json'
 		});
     };
+
+    self.getProtectedMessage = function(){
+	    return $.ajax("/users",{
+		    headers: {'x-access-token': sessionStorage.getItem("accessToken")}
+	    });
+    }
 }
 
-function ProtectedAreaViewModel(app){
+function ProtectedAreaViewModel(app, dataModel){
 	var self = this;
-	self.message = ko.observable('protectedArea');
+	self.message = ko.observable('loading...');
 	Sammy(function(){
 		this.get('#/protected',function(){
 			app.activeViewName('protected');
@@ -21,7 +26,12 @@ function ProtectedAreaViewModel(app){
 			var accessToken = sessionStorage.getItem('accessToken');
 			if(!accessToken){
 				this.redirect('#/login');
+				return;
 			}
+
+			dataModel.getProtectedMessage().done(function(data){
+				self.message(data.message);
+			});
 		});
 	});
 }
@@ -52,7 +62,7 @@ function LoginViewModel(app, dataModel){
 function App(dataModel) {
 	var self = this;
 	self.loginViewModel = new LoginViewModel(this,dataModel);	
-	self.protectedAreaViewModel = new ProtectedAreaViewModel(this);
+	self.protectedAreaViewModel = new ProtectedAreaViewModel(this,dataModel);
 	self.activeViewName = ko.observable('');
 
 	Sammy().run('#/protected');

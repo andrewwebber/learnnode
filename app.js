@@ -30,17 +30,33 @@ app.use('/jquery',   express.static(path.join(__dirname, 'node_modules/jquery/di
 app.use('/knockout', express.static(path.join(__dirname, 'node_modules/knockout/build/output/')));
 
 function restrict(req, res, next) {
-  if (req.session.user) {
+	console.log('looking for access token');
+	var accessToken = req.headers['x-access-token'];
+	if(accessToken){
+	  console.log('validating access token');
+	  try{
+		  var decoded = jwt.decode(accessToken, app.get('jwtTokenSecret'));
+		console.log('access token decoded');
+		if(decoded.exp <= Date.now()){
+			res.json(500, {error: 'access token has expired'});
+		}
+
+		console.log('access granted');
+		return next();
+	  }catch(err){
+		  console.log(err);
+		  res.json(500, {error: err});
+	  }
     next();
   } else {
-    console.log("redirecting user to login page");
-    req.session.error = 'Access denied!';
-    res.redirect('/login');
+	console.log("access denied");
+	  res.json(500, {error: "access denied"});
+	  next();
   }
 };
 
 app.use('/', routes);
-app.use('/users', restrict, users);
+app.use('/users', bodyParser(), restrict, users);
 app.use('/sample', restrict, sampleroute);
 app.use('/login', loginRoute);
 
