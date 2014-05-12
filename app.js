@@ -2,8 +2,6 @@ var express = require('express');
 var path = require('path');
 var favicon = require('static-favicon');
 var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var session = require('express-session');
 var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
@@ -23,41 +21,12 @@ app.use(favicon());
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
-app.use(cookieParser("sampleapplication"));
-app.use(session());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/jquery',   express.static(path.join(__dirname, 'node_modules/jquery/dist')));
 app.use('/knockout', express.static(path.join(__dirname, 'node_modules/knockout/build/output/')));
 
-function restrict(req, res, next) {
-	console.log('looking for access token');
-	var accessToken = req.headers['x-access-token'];
-	if(accessToken){
-	  console.log('validating access token');
-	  try{
-		  var decoded = jwt.decode(accessToken, app.get('jwtTokenSecret'));
-		console.log('access token decoded');
-		if(decoded.exp <= Date.now()){
-			res.json(500, {error: 'access token has expired'});
-		}
-
-		console.log('access granted');
-		return next();
-	  }catch(err){
-		  console.log(err);
-		  res.json(500, {error: err});
-	  }
-    next();
-  } else {
-	console.log("access denied");
-	  res.json(500, {error: "access denied"});
-	  next();
-  }
-};
-
 app.use('/', routes);
-app.use('/users', bodyParser(), restrict, users);
-app.use('/sample', restrict, sampleroute);
+app.use('/users', users);
 app.use('/login', loginRoute);
 
 /// catch 404 and forwarding to error handler
