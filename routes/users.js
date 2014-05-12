@@ -24,7 +24,6 @@ router.use(function(req, res, next){
         } else {
 		console.log("access denied");
 		res.json({error: "access denied"});
-		//next();
 	}
 });
 
