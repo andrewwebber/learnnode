@@ -1,17 +1,13 @@
 var express = require('express');
 var router = express.Router();
-var bodyParser = require('body-parser');
 var moment = require('moment');
 var jwt = require('jwt-simple');
+var settings = require('../shared/settings');
+
 var app = express();
-app.set('jwtTokenSecret', 'YOUR_SECRET_STRING');
+var jwtSecret = settings.jwtSecret();
 
-/* GET users listing. */
-router.get('/', function(req, res) {
-	res.render('login', { title: 'Sample Application' });
-});
-
-router.post('/', function(req, res) {
+router.post('/', function loginPost(req, res) {
 	var userName = req.body.userName;
 	var password = req.body.password;
 
@@ -27,7 +23,7 @@ router.post('/', function(req, res) {
 	var token = jwt.encode({
 			iss: userName,
 			exp: expires
-	}, app.get('jwtTokenSecret'));
+	}, jwtSecret);
 
 	res.json({
 		token : token,
