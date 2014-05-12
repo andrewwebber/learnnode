@@ -29,7 +29,7 @@ router.use(function(req, res, next){
 
 /* GET users listing. */
 router.get('/', function(req, res) {
-	res.json({ message: 'protected message hello world'});
+	res.json({ message: 'protected message hello world' + Date.now()});
 });
 
 module.exports = router;
